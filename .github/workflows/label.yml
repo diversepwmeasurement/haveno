@@ -1,25 +1,31 @@
-name: Comment to label
-
-on:
-  issues:
-    types: [labeled]
-  workflow_call:
-
 jobs:
   issueLabeled:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
-      - name: Bounty explanation
-        uses: peter-evans/create-or-update-comment@v3
-        if: github.event.label.name == '💰bounty'
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          issue-number: ${{ github.event.issue.number }}
-          body: >
-            There is a bounty on this issue, the amount is in the title. The reward will be awarded to the first person or group of people who resolves this issue.
+    - continue-on-error: true
+      if: "github.event.label.name == '\U0001F4B0bounty'"
+      name: Bounty explanation
+      uses: peter-evans/create-or-update-comment@v3
+      with:
+        body: 'There is a bounty on this issue, the amount is in the title. The reward
+          will be awarded to the first person or group of people who resolves this
+          issue.
 
 
-            If you are starting to work on this bounty, please write a comment, so that we can assign the issue to you. We expect contributors to provide a PR in a reasonable time frame or, in case of an extensive work, updates on their progresses. We will unassign the issue if we feel the assignee is not responsive or has abandoned the task.
+          If you are starting to work on this bounty, please write a comment, so that
+          we can assign the issue to you. We expect contributors to provide a PR in
+          a reasonable time frame or, in case of an extensive work, updates on their
+          progresses. We will unassign the issue if we feel the assignee is not responsive
+          or has abandoned the task.
 
 
-            Read the [full conditions and details](https://github.com/haveno-dex/haveno/blob/master/docs/bounties.md) of our bounty system.
+          Read the [full conditions and details](https://github.com/haveno-dex/haveno/blob/master/docs/bounties.md)
+          of our bounty system.
+
+          '
+        issue-number: ${{ github.event.issue.number }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+name: Comment to label
+on:
+  repository_dispatch:
+    types: trigger-ga___label.yml
